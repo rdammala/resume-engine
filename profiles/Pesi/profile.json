@@ -1,0 +1,30 @@
+{
+  "_comment": "One profile.json per person. Update fields before running.",
+  "tracker": {
+    "repoPath": "C:/Path/To/career-focus-pages/Job_Application_Tracker.html",
+    "repoDir": "C:/Path/To/career-focus-pages",
+    "desktopPath": "C:/Path/To/Job_Application_Tracker.html"
+  },
+  "outputBase": "C:/Path/To/Resumes",
+  "id": "Pesi",
+  "stylePrefs": {
+    "nextColorIndex": 0,
+    "usedThemes": []
+  },
+  "contact": {
+    "email": "candidate@example.com",
+    "location": "City, State",
+    "phone": "+1-000-000-0000",
+    "linkedin": "linkedin.com/in/candidate"
+  },
+  "sourceDocs": [
+    "./source-docs"
+  ],
+  "github": {
+    "pagesBase": "https://your-github-username.github.io/",
+    "username": "your-github-username",
+    "tokenEnvVar": "GITHUB_TOKEN"
+  },
+  "name": "Pesi",
+  "portfolioReposBase": "C:/Path/To/Repos"
+}

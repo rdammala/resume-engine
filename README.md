@@ -28,13 +28,13 @@ npm install
 
 ### 2. Set up your profile
 
-Edit `profiles/rajesh/profile.json` — or copy that folder to create a new one for another person:
+Edit one of the existing profile files (`profiles/Pesi`, `profiles/krishna`, `profiles/praneeth`) or copy a folder to create a new person:
 
 ```
 profiles/
-  rajesh/          ← your profile
-  wife/            ← add a new folder for another person
-  brother/
+  Pesi/
+  krishna/
+  praneeth/
 ```
 
 Drop your source documents (any format) into `profiles/<name>/source-docs/`:
@@ -51,7 +51,7 @@ source-docs/
 
 ```bash
 node run.js \
-  --profile rajesh \
+  --profile Pesi \
   --title "Platform Monitoring Engineer / Incident Manager" \
   --company Adyen \
   --role-short Platform-Monitoring-Engineer-Incident-Manager \
@@ -78,6 +78,9 @@ Set `llm.provider` in `config.json` or pass `--llm <provider>` on the CLI:
 | `openai` | ~$0.02–$0.08/run | Best | `OPENAI_API_KEY` env var |
 | `anthropic` | Similar to OpenAI | Excellent | `ANTHROPIC_API_KEY` env var |
 | `gemini` | Has free tier | Very good | `GEMINI_API_KEY` env var |
+| `openrouter` | Often low-cost | Good/Very good | `OPENROUTER_API_KEY` (Option B/C repos) |
+| `groq` | Low-cost, very fast | Good | `GROQ_API_KEY` (Option B/C repos) |
+| `together` | Low-cost | Good | `TOGETHER_API_KEY` (Option B/C repos) |
 
 Setting API keys (Windows):
 ```powershell
@@ -90,7 +93,7 @@ $env:OPENAI_API_KEY = "sk-..."      # session only
 
 ## Adding a New Person
 
-1. Copy `profiles/rajesh/` → `profiles/<name>/`
+1. Copy `profiles/Pesi/` → `profiles/<name>/`
 2. Edit `profile.json`:
    - Set `name`, `contact`, `github.username`
    - Set `outputBase` and `portfolioReposBase` paths
@@ -139,7 +142,7 @@ resume-engine/
 │   ├── publish-github.js      ← GitHub repo creation + Pages enable
 │   └── update-tracker.js      ← Inject entry into Job_Application_Tracker.html
 ├── profiles/
-│   └── rajesh/
+│   └── Pesi/
 │       ├── profile.json       ← Identity, GitHub, output paths
 │       ├── source-docs/       ← Drop any files here
 │       └── output/            ← (Optional local output override)
@@ -175,5 +178,5 @@ This engine is designed to scale:
 
 These are intentional quality gates — do not automate them:
 1. Review `.docx` files for content accuracy
-2. Rename to `Rajesh_Dammala.docx` / `Rajesh_Dammala_CoverLetter.docx`
+2. Rename to `Candidate_Resume.docx` / `Candidate_CoverLetter.docx`
 3. Change file sensitivity from Confidential-Internal → Public

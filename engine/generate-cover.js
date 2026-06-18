@@ -20,7 +20,8 @@ async function generateCover(profileData, job, outputDir, config) {
   const prose = await writeCoverProse(profileData, job, config);
 
   const v = nextVersion(outputDir, job);
-  const baseName = `Rajesh_Dammala_CoverLetter_${job.company.replace(/[^a-zA-Z0-9]/g, '_')}_${v}`;
+  const candidateSlug = (job.profileData?.name || 'Candidate').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+  const baseName = `${candidateSlug}_CoverLetter_${job.company.replace(/[^a-zA-Z0-9]/g, '_')}_${v}`;
   const docxPath = path.join(outputDir, `${baseName}.docx`);
   const pdfPath  = path.join(outputDir, `${baseName}.pdf`);
 
@@ -76,7 +77,7 @@ CANDIDATE PROFILE: ${profileData.rawText.slice(0, 3000)}`;
 
 async function buildDocx(paragraphs, job, outPath) {
   const contact = job.profileData?.contact || {};
-  const name    = job.profileData?.name || 'Rajesh Dammala';
+  const name    = job.profileData?.name || 'Candidate';
   const today   = new Date().toISOString().split('T')[0];
 
   const doc = new Document({
@@ -127,7 +128,7 @@ function buildPdf(paragraphs, job, outPath) {
   doc.pipe(fs.createWriteStream(outPath));
 
   const contact = job.profileData?.contact || {};
-  const name    = job.profileData?.name || 'Rajesh Dammala';
+  const name    = job.profileData?.name || 'Candidate';
   const today   = new Date().toISOString().split('T')[0];
 
   doc.font('Helvetica-Bold').fontSize(16).text(name, { align: 'center' });
@@ -154,7 +155,8 @@ function buildPdf(paragraphs, job, outPath) {
 // ---------------------------------------------------------------------------
 
 function nextVersion(outputDir, job) {
-  const base = `Rajesh_Dammala_CoverLetter_${job.company.replace(/[^a-zA-Z0-9]/g, '_')}`;
+  const candidateSlug = (job.profileData?.name || 'Candidate').replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+  const base = `${candidateSlug}_CoverLetter_${job.company.replace(/[^a-zA-Z0-9]/g, '_')}`;
   let v = 1;
   while (fs.existsSync(path.join(outputDir, `${base}_v${v}.docx`))) v++;
   return `v${v}`;

@@ -2,7 +2,7 @@
  * engine/generate-portfolio.js
  *
  * Generates a full role-specific portfolio website:
- *   index.html, style.css, script.js, README.md, favicon.svg, Rajesh_Dammala_Resume.pdf
+ *   index.html, style.css, script.js, README.md, favicon.svg, Candidate_Resume.pdf
  *
  * Theme is auto-selected from config.json accentColors using profile.stylePrefs.nextColorIndex.
  */
@@ -79,7 +79,7 @@ PROFILE SUMMARY:\n${profileData.rawText.slice(0, 3000)}`;
 // ---------------------------------------------------------------------------
 
 function buildHtml(copy, job, theme) {
-  const name    = job.profileData?.name || 'Rajesh Dammala';
+  const name    = job.profileData?.name || 'Candidate';
   const contact = job.profileData?.contact || {};
   const metrics = [
     ['20+', 'mission-critical services'],
@@ -137,7 +137,7 @@ function buildHtml(copy, job, theme) {
       <div class="hero-cta">
         <a href="#impact" class="btn btn-primary">View Impact</a>
         <a href="mailto:${esc(contact.email || '')}" class="btn btn-ghost">Contact</a>
-        <a href="Rajesh_Dammala_Resume.pdf" download class="btn btn-ghost">Download Resume</a>
+        <a href="Candidate_Resume.pdf" download class="btn btn-ghost">Download Resume</a>
       </div>
     </div>
     <aside class="hero-stats reveal-delay">
@@ -278,7 +278,7 @@ function buildReadme(job) {
 Role-specific portfolio for **${job.title}** applications.
 
 ## Live Site
-https://${job.profileData?.github?.username || 'rdammala'}.github.io/${job.repoName}/
+https://${job.profileData?.github?.username || 'your-github-username'}.github.io/${job.repoName}/
 
 ## Stack
 - Pure HTML / CSS / Vanilla JavaScript
@@ -311,9 +311,9 @@ function writeFavicon(dir, profile) {
 }
 
 function copyResumePdf(dir, job) {
-  // Copy the generated resume PDF into the portfolio folder as Rajesh_Dammala_Resume.pdf
+  // Copy the generated resume PDF into the portfolio folder as Candidate_Resume.pdf
   if (job.resumePdfPath && fs.existsSync(job.resumePdfPath)) {
-    fs.copyFileSync(job.resumePdfPath, path.join(dir, 'Rajesh_Dammala_Resume.pdf'));
+    fs.copyFileSync(job.resumePdfPath, path.join(dir, 'Candidate_Resume.pdf'));
     console.log(`[portfolio] ✓ Resume PDF copied.`);
   } else {
     console.warn(`[portfolio] ⚠ resumePdfPath not found; Download Resume button will 404 until you add the file.`);

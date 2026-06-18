@@ -3,7 +3,7 @@
  *
  * Generates resume.docx + resume.pdf for a given application.
  * Tailors content to the JD using the configured LLM.
- * Output files: <outputDir>/Rajesh_Dammala_<Company>_<RoleShort>_v<N>.docx/.pdf
+ * Output files: <outputDir>/<CandidateSlug>_Resume_<Company>_<RoleShort>_v<N>.docx/.pdf
  */
 
 'use strict';
@@ -26,7 +26,8 @@ async function generateResume(profileData, job, outputDir, config) {
   const tailored = await tailorContent(profileData, job, config);
 
   const versionSuffix = nextVersion(outputDir, job);
-  const baseName = safeName(`Rajesh_Dammala_${job.company}_${job.roleShort}_${versionSuffix}`);
+  const candidateSlug = safeName((job.profileData?.name || 'Candidate').replace(/\s+/g, '_'));
+  const baseName = safeName(`${candidateSlug}_Resume_${job.company}_${job.roleShort}_${versionSuffix}`);
   const docxPath = path.join(outputDir, `${baseName}.docx`);
   const pdfPath  = path.join(outputDir, `${baseName}.pdf`);
 
@@ -142,7 +143,7 @@ async function buildDocx(data, job, outPath, config) {
     sections: [{
       properties: { page: { margin: { top: 720, right: 720, bottom: 720, left: 720 } } },
       children: [
-        centerBold(job.profileData?.name || 'Rajesh Dammala', 30),
+        centerBold(job.profileData?.name || 'Candidate', 30),
         centerText(contactLine, 20),
         centerHyperlink(job.portfolioLinkText, job.portfolioUrl),
         spacer(),
@@ -188,7 +189,7 @@ function buildPdf(data, job, outPath, config) {
   const doc = new PDFDocument({ size: 'LETTER', margins: { top: 36, bottom: 36, left: 36, right: 36 } });
   doc.pipe(fs.createWriteStream(outPath));
 
-  const name = job.profileData?.name || 'Rajesh Dammala';
+  const name = job.profileData?.name || 'Candidate';
   const contact = job.profileData?.contact || {};
 
   doc.font('Helvetica-Bold').fontSize(18).text(name, { align: 'center' });
@@ -264,7 +265,8 @@ function safeName(str) {
 }
 
 function nextVersion(outputDir, job) {
-  const base = safeName(`Rajesh_Dammala_${job.company}_${job.roleShort}`);
+  const candidateSlug = safeName((job.profileData?.name || 'Candidate').replace(/\s+/g, '_'));
+  const base = safeName(`${candidateSlug}_Resume_${job.company}_${job.roleShort}`);
   let v = 1;
   while (fs.existsSync(path.join(outputDir, `${base}_v${v}.docx`))) v++;
   return `v${v}`;

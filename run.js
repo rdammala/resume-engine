@@ -2,7 +2,7 @@
  * run.js  — CLI entry point for the Resume Engine
  *
  * Usage:
- *   node run.js --profile rajesh --jd "path/to/jd.txt or raw text" --title "Platform Monitoring Engineer" --company "Adyen" --role-short "PlatformMonitoringEngineer"
+ *   node run.js --profile Pesi --jd "path/to/jd.txt or raw text" --title "Platform Monitoring Engineer" --company "Adyen" --role-short "PlatformMonitoringEngineer"
  *
  * Flags:
  *   --profile    <name>     Profile folder name under profiles/ (required)
@@ -56,7 +56,7 @@ Usage:
   node run.js --profile <name> --title "<Job Title>" --company "<Company>" --role-short "<Short>" --jd "<path or text>"
 
 Required:
-  --profile     Profile folder name under profiles/  (e.g. rajesh)
+  --profile     Profile folder name under profiles/  (e.g. Pesi)
   --title       Exact job title from JD
   --company     Company name
   --role-short  Short identifier for file names (no spaces, e.g. PlatformMonitoringEngineer)
@@ -69,9 +69,9 @@ Optional:
   --help        Show this message
 
 Examples:
-  node run.js --profile rajesh --title "Platform Monitoring Engineer" --company Adyen --role-short PlatformMonitoringEngineer --jd ./jd.txt
-  node run.js --profile wife   --title "Product Manager" --company Stripe --role-short ProductManager --jd "Looking for a PM with 5+ years..."
-  node run.js --profile brother --title "SRE Lead" --company Google --role-short SRELead --jd ./google-jd.txt --llm openai
+  node run.js --profile Pesi --title "Platform Monitoring Engineer" --company Adyen --role-short PlatformMonitoringEngineer --jd ./jd.txt
+  node run.js --profile krishna --title "Product Manager" --company Stripe --role-short ProductManager --jd "Looking for a PM with 5+ years..."
+  node run.js --profile praneeth --title "SRE Lead" --company Google --role-short SRELead --jd ./google-jd.txt --llm openai
 `);
 }
 
@@ -196,7 +196,7 @@ async function main() {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
   console.log('Manual steps remaining:');
   console.log('  1. Review .docx files for content accuracy');
-  console.log('  2. Rename files to Rajesh_Dammala.docx / Rajesh_Dammala_CoverLetter.docx');
+  console.log('  2. Rename files to Candidate_Resume.docx / Candidate_CoverLetter.docx');
   console.log('  3. Change file sensitivity label to Public before submitting\n');
 }
 
