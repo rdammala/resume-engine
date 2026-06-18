@@ -1,0 +1,20 @@
+{
+  "name": "resume-engine",
+  "version": "1.0.0",
+  "description": "Local-first AI resume, cover letter, and portfolio generator. Supports multiple profiles.",
+  "main": "run.js",
+  "scripts": {
+    "help": "node run.js --help"
+  },
+  "dependencies": {
+    "docx": "^8.5.0",
+    "mammoth": "^1.7.1",
+    "pdf-parse": "^1.1.1",
+    "pdfkit": "^0.15.0",
+    "tesseract.js": "^5.1.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18"
+  }
+}
