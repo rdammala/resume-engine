@@ -1,0 +1,30 @@
+{
+  "_comment": "Rajesh Dammala - Resume engine profile for high-volume application automation",
+  "tracker": {
+    "repoPath": "C:/Users/v-rdammala/OneDrive - Microsoft/Desktop/Personal/Resumes/2026/Repos/career-focus-pages/Job_Application_Tracker.html",
+    "repoDir": "C:/Users/v-rdammala/OneDrive - Microsoft/Desktop/Personal/Resumes/2026/Repos/career-focus-pages",
+    "desktopPath": "C:/Users/v-rdammala/OneDrive - Microsoft/Desktop/Personal/Resumes/2026/Job_Application_Tracker.html"
+  },
+  "outputBase": "C:/Users/v-rdammala/OneDrive - Microsoft/Desktop/Personal/Resumes/2026",
+  "id": "Rajesh",
+  "stylePrefs": {
+    "nextColorIndex": 0,
+    "usedThemes": []
+  },
+  "contact": {
+    "email": "rajesh.dammala@gmail.com",
+    "location": "Seattle, WA",
+    "phone": "+1-425-229-0060",
+    "linkedin": "linkedin.com/in/rajesh-dammala"
+  },
+  "sourceDocs": [
+    "./source-docs"
+  ],
+  "github": {
+    "pagesBase": "https://rdammala.github.io/",
+    "username": "rdammala",
+    "tokenEnvVar": "GITHUB_TOKEN"
+  },
+  "name": "Rajesh Dammala",
+  "portfolioReposBase": "C:/Users/v-rdammala/OneDrive - Microsoft/Desktop/Personal/Resumes/2026/Repos"
+}
