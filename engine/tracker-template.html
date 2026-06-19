@@ -169,7 +169,6 @@
         <div class="table-wrapper">
             <table>
                 <thead><tr>
-                    <th onclick="sortApps('portfolio')">Portfolio</th>
                     <th onclick="sortApps('role')">Role</th>
                     <th onclick="sortApps('company')">Company</th>
                     <th onclick="sortApps('date')">Applied Date</th>
@@ -399,9 +398,7 @@ function renderApps() {
     document.getElementById('app-empty').style.display = filtered.length ? 'none' : 'block';
     tbody.innerHTML = filtered.map(d => {
         const repoUrl = extractGitHubRepoUrl(d.link);
-        const repoLink = repoUrl ? `<a href="${repoUrl}" target="_blank" class="repo-link" title="View repository">🔗 GitHub Repo</a>` : '';
         return `<tr>
-            <td class="portfolio-col"><strong>${esc(d.portfolio)}</strong>${repoLink}</td>
             <td>${esc(d.role)}</td><td>${esc(d.company)}</td>
             <td>${fmtDate(d.date)}</td>
             <td class="link-cell" style="font-size:.75rem"><a href="${esc(d.link)}" target="_blank">Portfolio</a>${repoUrl ? ` | <a href="${repoUrl}" target="_blank">Repo</a>` : ''}</td>
