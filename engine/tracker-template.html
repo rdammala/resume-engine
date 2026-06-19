@@ -30,6 +30,7 @@
             color: var(--text-muted);
             font-size: .76rem;
             white-space: nowrap;
+            transition: color 0.2s;
         }
         .theme-toggle { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: .4rem .65rem; color: var(--text); cursor: pointer; font-size: 1rem; }
 
@@ -62,22 +63,26 @@
         .btn-xs { padding: .2rem .5rem; font-size: .72rem; border-radius: 6px; }
 
         .table-wrapper { overflow-x: auto; padding: 0 1rem 2rem; }
-        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        table { width: 100%; border-collapse: collapse; min-width: 1000px; }
         th { background: var(--bg-alt); padding: .7rem .85rem; text-align: left; font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); border-bottom: 2px solid var(--border); cursor: pointer; user-select: none; }
         th:hover { color: var(--accent-light); }
         td { padding: .7rem .85rem; border-bottom: 1px solid var(--border); font-size: .87rem; vertical-align: top; }
         tr:hover td { background: var(--surface); }
         .link-cell a { color: var(--accent-light); text-decoration: none; font-size: .8rem; word-break: break-all; }
         .link-cell a:hover { text-decoration: underline; }
+        .portfolio-col { min-width: 180px; }
+        .repo-link { display: block; font-size: .75rem; color: var(--info); margin-top: .25rem; text-decoration: none; }
+        .repo-link:hover { text-decoration: underline; }
 
         .status-badge { display: inline-block; padding: .18rem .55rem; border-radius: 12px; font-size: .72rem; font-weight: 600; }
         .status-applied { background: rgba(99,102,241,.15); color: var(--accent-light); }
         .status-interviewing { background: rgba(245,158,11,.15); color: var(--warning); }
         .status-offered { background: rgba(34,197,94,.15); color: var(--success); }
         .status-rejected { background: rgba(239,68,68,.15); color: var(--danger); }
+        .status-denied { background: rgba(239,68,68,.15); color: var(--danger); }
         .status-pending { background: rgba(148,163,184,.15); color: var(--text-muted); }
 
-        .comments-cell { max-width: 220px; font-size: .8rem; color: var(--text-muted); white-space: pre-wrap; }
+        .comments-cell { max-width: 200px; font-size: .8rem; color: var(--text-muted); white-space: pre-wrap; }
         .row-actions { display: flex; gap: .35rem; flex-wrap: wrap; }
 
         /* Contacts cards */
@@ -90,10 +95,7 @@
         .cc-detail { font-size: .82rem; color: var(--text-muted); margin-bottom: .3rem; display: flex; gap: .5rem; align-items: center; }
         .cc-detail a { color: var(--accent-light); text-decoration: none; }
         .cc-detail a:hover { text-decoration: underline; }
-        .cc-resume { font-size: .78rem; color: var(--info); margin-top: .5rem; }
         .cc-comments { font-size: .8rem; color: var(--text-muted); margin-top: .5rem; white-space: pre-wrap; background: var(--bg-alt); border-radius: 8px; padding: .5rem .75rem; }
-        .cc-voice { margin-top: .5rem; }
-        .cc-voice audio { width: 100%; height: 36px; border-radius: 8px; }
         .cc-meta { font-size: .72rem; color: var(--text-muted); margin-top: .5rem; }
 
         /* Modal */
@@ -110,14 +112,12 @@
         .form-row { display: flex; gap: .75rem; }
         .form-row .form-group { flex: 1; }
 
-        /* Voice recorder */
-        .voice-recorder { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; margin-top: .35rem; }
-        .voice-recorder audio { height: 32px; border-radius: 6px; }
-        .rec-indicator { width: 10px; height: 10px; background: var(--danger); border-radius: 50%; animation: pulse 1s infinite; display: inline-block; }
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
-
         .empty-state { text-align: center; padding: 3rem 2rem; color: var(--text-muted); }
         .empty-state h3 { font-size: 1.1rem; margin-bottom: .4rem; color: var(--text); }
+
+        /* Portfolio Guide */
+        .portfolio-guide-intro { padding: 1.5rem 2rem; color: var(--text-muted); font-size: .9rem; max-width: 1100px; }
+        .portfolio-guide-intro strong { color: var(--text); }
 
         @media (max-width: 768px) {
             .header { padding: .75rem 1rem; }
@@ -127,6 +127,8 @@
             .contacts-grid { grid-template-columns: 1fr; padding: .75rem 1rem; }
             .tab { padding: .7rem 1rem; font-size: .82rem; }
             .form-row { flex-direction: column; gap: 0; }
+            table { min-width: auto; }
+            .portfolio-col { min-width: 140px; }
         }
     </style>
 </head>
@@ -159,6 +161,7 @@
                 <option value="Interviewing">Interviewing</option>
                 <option value="Offered">Offered</option>
                 <option value="Rejected">Rejected</option>
+                <option value="Denied">Denied</option>
                 <option value="Pending">Pending</option>
             </select>
             <button class="btn btn-primary" onclick="openAppModal()">+ Add Application</button>
@@ -170,7 +173,7 @@
                     <th onclick="sortApps('role')">Role</th>
                     <th onclick="sortApps('company')">Company</th>
                     <th onclick="sortApps('date')">Applied Date</th>
-                    <th>Portfolio Link</th>
+                    <th>Links</th>
                     <th onclick="sortApps('status')">Status</th>
                     <th>Comments</th>
                     <th>Actions</th>
@@ -187,7 +190,6 @@
         <div class="toolbar">
             <input type="text" id="contact-search" placeholder="Search contacts by name, company, notes...">
             <button class="btn btn-primary" onclick="openContactModal()">+ Add Contact</button>
-            <button class="btn btn-secondary btn-sm" id="picker-btn" onclick="pickFromContacts()" style="display:none">📱 From Phone Contacts</button>
         </div>
         <div class="contacts-grid" id="contacts-grid"></div>
         <div class="empty-state" id="contact-empty" style="display:none"><h3>No networking contacts yet</h3><p>Add people you've connected with at events, referrals, or recruiters</p></div>
@@ -195,83 +197,11 @@
 
     <!-- ==================== PORTFOLIO GUIDE TAB ==================== -->
     <div class="tab-content" id="tab-portfolios">
-        <div style="padding:1.5rem 2rem;max-width:1100px">
-            <p style="color:var(--text-muted);margin-bottom:1.25rem;font-size:.9rem">Use this guide to pick the right portfolio when sharing with recruiters or networking contacts. Each site is tailored for a specific role category.</p>
-            <div class="contacts-grid" style="padding:0">
-                <div class="contact-card">
-                    <div class="cc-header"><div><div class="cc-name">🌐 Engineering Leadership Portfolio</div><div class="cc-company">General / Broad Portfolio</div></div></div>
-                    <div class="cc-detail" style="flex-direction:column;align-items:flex-start;gap:.25rem">
-                        <strong style="color:var(--text);font-size:.85rem">Best for:</strong>
-                        <span>SRE Leadership, Engineering Management, Technical Program Manager, VP/Director Engineering Ops — any senior role where you want to show the full breadth of your career.</span>
-                    </div>
-                    <div class="cc-resume" style="margin-top:.75rem"><a href="https://rdammala.github.io/rajesh-dammala-portfolio/" target="_blank" style="color:var(--accent-light)">🔗 rdammala.github.io/rajesh-dammala-portfolio</a></div>
-                </div>
-                <div class="contact-card">
-                    <div class="cc-header"><div><div class="cc-name">🏗️ RD-Profile</div><div class="cc-company">Director / VP Technical Support Engineering</div></div></div>
-                    <div class="cc-detail" style="flex-direction:column;align-items:flex-start;gap:.25rem">
-                        <strong style="color:var(--text);font-size:.85rem">Best for:</strong>
-                        <span>Director of Support Engineering, VP Support, Head of T3, Support Org Builder — roles focused on building/scaling technical support orgs as a strategic function.</span>
-                    </div>
-                    <div class="cc-resume" style="margin-top:.75rem"><a href="https://rdammala.github.io/RD-Profile/" target="_blank" style="color:var(--accent-light)">🔗 rdammala.github.io/RD-Profile</a></div>
-                </div>
-                <div class="contact-card">
-                    <div class="cc-header"><div><div class="cc-name">🚨 Senior-Incident-Manager</div><div class="cc-company">Incident Response Strategy & Command</div></div></div>
-                    <div class="cc-detail" style="flex-direction:column;align-items:flex-start;gap:.25rem">
-                        <strong style="color:var(--text);font-size:.85rem">Best for:</strong>
-                        <span>Senior Incident Manager, Incident Commander, Major Incident Manager — roles owning incident response operating models, tooling roadmaps, and high-severity command.</span>
-                    </div>
-                    <div class="cc-resume" style="margin-top:.75rem"><a href="https://rdammala.github.io/Senior-Incident-Manager/" target="_blank" style="color:var(--accent-light)">🔗 rdammala.github.io/Senior-Incident-Manager</a></div>
-                </div>
-                <div class="contact-card">
-                    <div class="cc-header"><div><div class="cc-name">🤝 Staff-Escalation-Manager</div><div class="cc-company">Customer Advocacy & Executive Escalation</div></div></div>
-                    <div class="cc-detail" style="flex-direction:column;align-items:flex-start;gap:.25rem">
-                        <strong style="color:var(--text);font-size:.85rem">Best for:</strong>
-                        <span>Staff/Senior Escalation Manager, Customer Advocacy Manager, Critical Situation Manager — roles focused on customer-champion escalation, executive communication, and cross-functional coordination.</span>
-                    </div>
-                    <div class="cc-resume" style="margin-top:.75rem"><a href="https://rdammala.github.io/Staff-Escalation-Manager/" target="_blank" style="color:var(--accent-light)">🔗 rdammala.github.io/Staff-Escalation-Manager</a></div>
-                </div>
-                <div class="contact-card">
-                    <div class="cc-header"><div><div class="cc-name">🚀 Technical-Lead-Deployment-Operations</div><div class="cc-company">Production Deployment & Fleet Operations</div></div></div>
-                    <div class="cc-detail" style="flex-direction:column;align-items:flex-start;gap:.25rem">
-                        <strong style="color:var(--text);font-size:.85rem">Best for:</strong>
-                        <span>Technical Lead Deployment Ops, Production Engineering Lead, Fleet Operations Manager — roles owning deployment lifecycle, operational readiness, and data center/fleet operations at scale.</span>
-                    </div>
-                    <div class="cc-resume" style="margin-top:.75rem"><a href="https://rdammala.github.io/Technical-Lead-Deployment-Operations/" target="_blank" style="color:var(--accent-light)">🔗 rdammala.github.io/Technical-Lead-Deployment-Operations</a></div>
-                </div>
-                <div class="contact-card">
-                    <div class="cc-header"><div><div class="cc-name">☁️ Manager-Cloud-Support</div><div class="cc-company">Cloud Support Engineering & Tier 3 Reliability</div></div></div>
-                    <div class="cc-detail" style="flex-direction:column;align-items:flex-start;gap:.25rem">
-                        <strong style="color:var(--text);font-size:.85rem">Best for:</strong>
-                        <span>Manager Cloud Support, Cloud Operations Manager, Tier 3 Engineering Manager — roles transforming reactive support into reliability engineering with problem management and global delivery.</span>
-                    </div>
-                    <div class="cc-resume" style="margin-top:.75rem"><a href="https://rdammala.github.io/Manager-Cloud-Support/" target="_blank" style="color:var(--accent-light)">🔗 rdammala.github.io/Manager-Cloud-Support</a></div>
-                </div>
-                <div class="contact-card">
-                    <div class="cc-header"><div><div class="cc-name">🤖 Senior-Manager-SRE</div><div class="cc-company">AI-Powered Operations & IT Ops Transformation</div></div></div>
-                    <div class="cc-detail" style="flex-direction:column;align-items:flex-start;gap:.25rem">
-                        <strong style="color:var(--text);font-size:.85rem">Best for:</strong>
-                        <span>Senior Manager SRE, Director of SRE, IT Operations Transformation Lead — roles driving AIOps adoption, intelligent automation, and shifting from process-heavy to technology-focused operating models.</span>
-                    </div>
-                    <div class="cc-resume" style="margin-top:.75rem"><a href="https://rdammala.github.io/Senior-Manager-SRE/" target="_blank" style="color:var(--accent-light)">🔗 rdammala.github.io/Senior-Manager-SRE</a></div>
-                </div>
-                <div class="contact-card">
-                    <div class="cc-header"><div><div class="cc-name">🛡️ Application-SRE-Manager</div><div class="cc-company">App Reliability, Self-Healing & Prevention</div></div></div>
-                    <div class="cc-detail" style="flex-direction:column;align-items:flex-start;gap:.25rem">
-                        <strong style="color:var(--text);font-size:.85rem">Best for:</strong>
-                        <span>Application SRE Manager, Production App Reliability Lead, Service Reliability Manager — roles owning application stability, auto-detection/self-healing, and prevention-first production operations.</span>
-                    </div>
-                    <div class="cc-resume" style="margin-top:.75rem"><a href="https://rdammala.github.io/Application-SRE-Manager/" target="_blank" style="color:var(--accent-light)">🔗 rdammala.github.io/Application-SRE-Manager</a></div>
-                </div>
-                <div class="contact-card">
-                    <div class="cc-header"><div><div class="cc-name">📊 Senior-IT-Systems-Operations-Manager</div><div class="cc-company">Enterprise Infrastructure Strategy & Team Development</div></div></div>
-                    <div class="cc-detail" style="flex-direction:column;align-items:flex-start;gap:.25rem">
-                        <strong style="color:var(--text);font-size:.85rem">Best for:</strong>
-                        <span>Sr. IT Systems Ops Manager, Enterprise Ops Director, Infrastructure Operations Manager — roles translating business objectives into infrastructure strategy with team scaling and organizational development.</span>
-                    </div>
-                    <div class="cc-resume" style="margin-top:.75rem"><a href="https://rdammala.github.io/Senior-IT-Systems-Operations-Manager/" target="_blank" style="color:var(--accent-light)">🔗 rdammala.github.io/Senior-IT-Systems-Operations-Manager</a></div>
-                </div>
-            </div>
+        <div class="portfolio-guide-intro">
+            <p><strong>📌 How to use:</strong> Each portfolio site below is tailored for a specific role category. When applying to a role, use the matching portfolio to showcase your most relevant experience for that position type. <strong>Generic resumes like "RD-Profile" or "Finance" work for any application</strong> when no specific portfolio matches the role.</p>
         </div>
+        <div class="contacts-grid" id="portfolios-grid" style="padding:0 2rem 2rem"></div>
+        <div class="empty-state" id="portfolios-empty" style="display:none"><h3>No portfolios configured yet</h3><p>As you add applications, matching portfolios will appear here</p></div>
     </div>
 
     <!-- ==================== APP MODAL ==================== -->
@@ -280,14 +210,14 @@
             <h2 id="app-modal-title">Add Application</h2>
             <input type="hidden" id="app-edit-id">
             <div class="form-row">
-                <div class="form-group"><label>Portfolio Name</label><input type="text" id="f-portfolio" placeholder="e.g., Senior-Incident-Manager"></div>
+                <div class="form-group"><label>Portfolio Name</label><input type="text" id="f-portfolio" placeholder="e.g., Senior-Incident-Manager or RD-Profile"></div>
                 <div class="form-group"><label>Applied Date</label><input type="date" id="f-date"></div>
             </div>
             <div class="form-group"><label>Role / Position</label><input type="text" id="f-role" placeholder="e.g., Sr. IT Systems Operations Manager"></div>
             <div class="form-group"><label>Company</label><input type="text" id="f-company" placeholder="e.g., ExtraHop"></div>
             <div class="form-group"><label>Portfolio Link</label><input type="url" id="f-link" placeholder="https://rdammala.github.io/..."></div>
             <div class="form-group"><label>Status</label>
-                <select id="f-status"><option value="Applied">Applied</option><option value="Interviewing">Interviewing</option><option value="Offered">Offered</option><option value="Rejected">Rejected</option><option value="Pending">Pending</option></select>
+                <select id="f-status"><option value="Applied">Applied</option><option value="Interviewing">Interviewing</option><option value="Offered">Offered</option><option value="Rejected">Rejected</option><option value="Denied">Denied</option><option value="Pending">Pending</option></select>
             </div>
             <div class="form-group"><label>Comments / Connections</label><textarea id="f-comments" placeholder="Recruiter name, response notes..."></textarea></div>
             <div class="modal-actions">
@@ -306,37 +236,12 @@
                 <div class="form-group"><label>Full Name *</label><input type="text" id="c-name" placeholder="Jane Smith"></div>
                 <div class="form-group"><label>Company</label><input type="text" id="c-company" placeholder="e.g., Google"></div>
             </div>
-            <div class="form-row">
-                <div class="form-group"><label>Email</label><input type="email" id="c-email" placeholder="jane@company.com"></div>
-            </div>
-            <div class="form-group">
-                <label>Phone Numbers</label>
-                <div id="phone-list"></div>
-                <button class="btn btn-secondary btn-xs" style="margin-top:.35rem" onclick="addPhoneRow()">+ Add Phone</button>
-            </div>
+            <div class="form-group"><label>Email</label><input type="email" id="c-email" placeholder="jane@company.com"></div>
             <div class="form-group"><label>LinkedIn Profile</label><input type="url" id="c-linkedin" placeholder="https://linkedin.com/in/..."></div>
             <div class="form-group"><label>How We Met</label>
-                <select id="c-source"><option value="Networking Event">Networking Event</option><option value="LinkedIn">LinkedIn</option><option value="Referral">Referral</option><option value="Recruiter">Recruiter</option><option value="Conference">Conference</option><option value="Friend">Friend</option><option value="Colleague">Colleague</option><option value="Cold Outreach">Cold Outreach</option><option value="Other">Other</option></select>
+                <select id="c-source"><option value="Networking Event">Networking Event</option><option value="LinkedIn">LinkedIn</option><option value="Referral">Referral</option><option value="Recruiter">Recruiter</option><option value="Conference">Conference</option><option value="Other">Other</option></select>
             </div>
-            <div class="form-group"><label>Resume / Portfolio Shared</label>
-                <select id="c-resume"><option value="">Not shared</option><option value="rajesh-dammala-portfolio">🌐 Engineering Leadership (General)</option><option value="RD-Profile">🏗️ RD-Profile (Director Support Eng)</option><option value="Senior-Incident-Manager">🚨 Senior-Incident-Manager (Incident Command)</option><option value="Staff-Escalation-Manager">🤝 Staff-Escalation-Manager (Customer Advocacy)</option><option value="Technical-Lead-Deployment-Operations">🚀 Tech Lead Deployment Ops (Fleet/DC Ops)</option><option value="Manager-Cloud-Support">☁️ Manager-Cloud-Support (Tier 3 Reliability)</option><option value="Senior-Manager-SRE">🤖 Senior-Manager-SRE (AIOps Transformation)</option><option value="Application-SRE-Manager">🛡️ Application-SRE-Manager (App Reliability)</option><option value="Senior-IT-Systems-Operations-Manager">📊 Sr IT Systems Ops Mgr (Enterprise Infra)</option><option value="General Resume">📄 General Resume (PDF)</option></select>
-            </div>
-            <div class="form-group"><label>Notes / Comments</label><textarea id="c-comments" placeholder="Discussion details, follow-up items, referral status..."></textarea></div>
-            <div class="form-group">
-                <label>🎤 Voice Note</label>
-                <div class="voice-recorder" id="voice-recorder">
-                    <button class="btn btn-danger btn-sm" id="rec-start" onclick="startRecording()">⏺ Record</button>
-                    <button class="btn btn-secondary btn-sm" id="rec-stop" onclick="stopRecording()" style="display:none"><span class="rec-indicator"></span> Stop</button>
-                    <span id="rec-timer" style="font-size:.8rem;color:var(--text-muted)"></span>
-                    <audio id="rec-preview" controls style="display:none"></audio>
-                    <button class="btn btn-xs btn-secondary" id="rec-delete" onclick="deleteRecording()" style="display:none">✕ Remove</button>
-                </div>
-                <div style="font-size:.72rem;color:var(--text-muted);margin-top:.25rem">Record a quick voice memo — auto-transcribes to text (Chrome/Edge)</div>
-                <div style="display:flex;gap:.5rem;align-items:center;margin-top:.35rem">
-                    <textarea id="rec-transcript" placeholder="Transcript will appear here automatically while recording..." style="flex:1;min-height:60px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.55rem .7rem;color:var(--text);font-size:.82rem;font-family:inherit;resize:vertical;display:none"></textarea>
-                    <button class="btn btn-secondary btn-xs" id="transcribe-btn" onclick="transcribeExistingAudio()" style="display:none" title="Re-transcribe audio">📝 Transcribe</button>
-                </div>
-            </div>
+            <div class="form-group"><label>Notes / Comments</label><textarea id="c-comments" placeholder="Discussion details, follow-up items..."></textarea></div>
             <div class="modal-actions">
                 <button class="btn btn-secondary" onclick="closeContactModal()">Cancel</button>
                 <button class="btn btn-primary" onclick="saveContact()">Save Contact</button>
@@ -345,29 +250,25 @@
     </div>
 
 <script>
-// ======================== DATA LAYER ========================
+// ======================== CONSTANTS ========================
 const APP_KEY = 'rd_job_tracker';
 const CONTACT_KEY = 'rd_contacts';
 const META_KEY = 'rd_tracker_meta';
+const UPDATE_INTERVAL = 30000; // Auto-refresh Last Updated badge every 30 seconds
 
-const defaultApps = [
-    { id:1, portfolio:'RD-Profile', role:'Technical Support Director', company:'Boulevard', date:'2026-06-10', link:'https://rdammala.github.io/RD-Profile/', status:'Applied', comments:'' },
-    { id:2, portfolio:'Senior-Incident-Manager', role:'Senior Incident Manager', company:'Amazon Prime Video', date:'2026-06-11', link:'https://rdammala.github.io/Senior-Incident-Manager/', status:'Applied', comments:'' },
-    { id:3, portfolio:'Staff-Escalation-Manager', role:'Staff Escalation Manager', company:'Snowflake', date:'2026-06-12', link:'https://rdammala.github.io/Staff-Escalation-Manager/', status:'Applied', comments:'' },
-    { id:4, portfolio:'Technical-Lead-Deployment-Operations', role:'Technical Lead, Deployment Operations', company:'OpenAI', date:'2026-06-13', link:'https://rdammala.github.io/Technical-Lead-Deployment-Operations/', status:'Applied', comments:'' },
-    { id:5, portfolio:'Manager-Cloud-Support', role:'Manager, Cloud Support Engineering', company:'Cox Enterprises / RapidScale', date:'2026-06-14', link:'https://rdammala.github.io/Manager-Cloud-Support/', status:'Denied', comments:'Application denied due to no visa sponsorship; candidate on H1B.' },
-    { id:6, portfolio:'Senior-Manager-SRE', role:'Senior Manager, Site Reliability Engineering', company:'NVIDIA', date:'2026-06-14', link:'https://rdammala.github.io/Senior-Manager-SRE/', status:'Applied', comments:'' },
-    { id:7, portfolio:'Application-SRE-Manager', role:'Application SRE & Ops Manager', company:'IRIS Software Group', date:'2026-06-15', link:'https://rdammala.github.io/Application-SRE-Manager/', status:'Applied', comments:'' },
-    { id:8, portfolio:'Senior-IT-Systems-Operations-Manager', role:'Sr. IT Systems Operations Manager', company:'ExtraHop', date:'2026-06-15', link:'https://rdammala.github.io/Senior-IT-Systems-Operations-Manager/', status:'Applied', comments:'' },
-    { id:9, portfolio:'TPM-Infrastructure', role:'Technical Program Manager, Infrastructure', company:'Figma', date:'2026-06-16', link:'https://rdammala.github.io/TPM-Infrastructure/', status:'Applied', comments:'' },
-    { id:10, portfolio:'SRE-Observability-Engineering', role:'Senior SRE & Observability Engineering Leader', company:'Microsoft Tech (General)', date:'2026-06-16', link:'https://rdammala.github.io/SRE-Observability-Engineering/', status:'Applied', comments:'' },
-    { id:11, portfolio:'Platform-Monitoring-Engineer-Incident-Manager', role:'Platform Monitoring Engineer / Incident Manager', company:'Adyen', date:'2026-06-17', link:'https://rdammala.github.io/Platform-Monitoring-Engineer-Incident-Manager/', status:'Applied', comments:'' },
-    { id:12, portfolio:'Senior-Platform-Reliability-Engineer', role:'Senior Platform Reliability Engineer', company:'GrowTherapy', date:'2026-06-18', link:'https://rdammala.github.io/Senior-Platform-Reliability-Engineer/', status:'Applied', comments:'' }
+// Default apps - EMPTY FOR NEW USERS, populates from stored data
+const defaultApps = [];
+
+// Generic resumes that can be used for any role
+const genericResumes = [
+    { name: 'RD-Profile', desc: 'Technical Support Director', url: 'https://rdammala.github.io/RD-Profile/', icon: '🌐' },
+    { name: 'Finance-Decision-Engine', desc: 'Finance Operations & FinOps Director', url: 'https://rdammala.github.io/Finance-Decision-Engine/', icon: '💰' }
 ];
 
 let apps = [], contacts = [];
 let appSort = { field:'date', dir:-1 };
 
+// ======================== DATA LAYER ========================
 function loadApps() {
     const s = localStorage.getItem(APP_KEY);
     if (!s) {
@@ -405,13 +306,11 @@ function seedLastUpdatedIfMissing() {
     if (existing) return;
 
     const candidates = [];
-
     apps.forEach((a) => {
         if (!a || !a.date) return;
         const dt = new Date(`${a.date}T12:00:00`);
         if (!Number.isNaN(dt.getTime())) candidates.push(dt);
     });
-
     contacts.forEach((c) => {
         if (!c || !c.created) return;
         const dt = new Date(`${c.created}T12:00:00`);
@@ -437,7 +336,6 @@ function renderLastUpdated() {
         const meta = JSON.parse(raw);
         let ts = Number(meta.lastUpdatedMs);
 
-        // Backward compatibility for older metadata that stored ISO timestamp.
         if ((!Number.isFinite(ts) || ts <= 0) && meta.lastUpdated) {
             const parsed = Date.parse(meta.lastUpdated);
             if (Number.isFinite(parsed)) ts = parsed;
@@ -464,10 +362,23 @@ function renderLastUpdated() {
     }
 }
 
+// ======================== HELPER: EXTRACT GITHUB REPO ========================
+function extractGitHubRepoUrl(portfolioLink) {
+    // From "https://rdammala.github.io/Senior-Incident-Manager/" extract repo name
+    if (!portfolioLink) return null;
+    const match = portfolioLink.match(/github\.io\/([^\/]+)/);
+    if (match && match[1]) {
+        return `https://github.com/rdammala/${match[1]}`;
+    }
+    return null;
+}
+
 // ======================== TABS ========================
 function switchTab(tab) {
     document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === 'tab-' + tab));
+    // Refresh last updated when switching tabs
+    renderLastUpdated();
 }
 
 // ======================== APPLICATIONS ========================
@@ -486,27 +397,32 @@ function renderApps() {
     });
     const tbody = document.getElementById('app-table-body');
     document.getElementById('app-empty').style.display = filtered.length ? 'none' : 'block';
-    tbody.innerHTML = filtered.map(d => `<tr>
-        <td><strong>${esc(d.portfolio)}</strong></td>
-        <td>${esc(d.role)}</td><td>${esc(d.company)}</td>
-        <td>${fmtDate(d.date)}</td>
-        <td class="link-cell"><a href="${esc(d.link)}" target="_blank">${esc(d.link)}</a></td>
-        <td><span class="status-badge status-${d.status.toLowerCase()}">${d.status}</span></td>
-        <td class="comments-cell">${esc(d.comments)||'<span style="color:var(--text-muted);font-style:italic">—</span>'}</td>
-        <td class="row-actions">
-            <button class="btn btn-secondary btn-sm" onclick="editApp(${d.id})">✏️</button>
-            <button class="btn btn-danger btn-sm" onclick="deleteApp(${d.id})">🗑️</button>
-        </td></tr>`).join('');
+    tbody.innerHTML = filtered.map(d => {
+        const repoUrl = extractGitHubRepoUrl(d.link);
+        const repoLink = repoUrl ? `<a href="${repoUrl}" target="_blank" class="repo-link" title="View repository">🔗 GitHub Repo</a>` : '';
+        return `<tr>
+            <td class="portfolio-col"><strong>${esc(d.portfolio)}</strong>${repoLink}</td>
+            <td>${esc(d.role)}</td><td>${esc(d.company)}</td>
+            <td>${fmtDate(d.date)}</td>
+            <td class="link-cell" style="font-size:.75rem"><a href="${esc(d.link)}" target="_blank">Portfolio</a>${repoUrl ? ` | <a href="${repoUrl}" target="_blank">Repo</a>` : ''}</td>
+            <td><span class="status-badge status-${d.status.toLowerCase()}">${d.status}</span></td>
+            <td class="comments-cell">${esc(d.comments)||'<span style="color:var(--text-muted);font-style:italic">—</span>'}</td>
+            <td class="row-actions">
+                <button class="btn btn-secondary btn-sm" onclick="editApp(${d.id})">✏️</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteApp(${d.id})">🗑️</button>
+            </td></tr>`;
+    }).join('');
+    
     const tot = apps.length, ap = apps.filter(d=>d.status==='Applied').length,
         iv = apps.filter(d=>d.status==='Interviewing').length,
         of = apps.filter(d=>d.status==='Offered').length,
-        rj = apps.filter(d=>d.status==='Rejected').length;
+        rj = apps.filter(d=>['Rejected','Denied'].includes(d.status)).length;
     document.getElementById('stats-bar').innerHTML = `
         <div class="stat-chip"><strong>${tot}</strong> Total</div>
         <div class="stat-chip"><strong>${ap}</strong> Applied</div>
         <div class="stat-chip"><strong>${iv}</strong> Interviewing</div>
         <div class="stat-chip"><strong>${of}</strong> Offered</div>
-        <div class="stat-chip"><strong>${rj}</strong> Rejected</div>`;
+        <div class="stat-chip"><strong>${rj}</strong> Rejected/Denied</div>`;
 }
 
 function sortApps(f) { if (appSort.field===f) appSort.dir*=-1; else { appSort.field=f; appSort.dir=1; } renderApps(); }
@@ -549,7 +465,7 @@ function saveApp() {
     if (!entry.role || !entry.company) { alert('Role and Company are required.'); return; }
     if (eid) { const i = apps.findIndex(d=>d.id===parseInt(eid)); if (i!==-1) apps[i] = {...apps[i],...entry}; }
     else { entry.id = apps.length ? Math.max(...apps.map(d=>d.id))+1 : 1; apps.push(entry); }
-    saveApps(); markLastUpdated(); closeAppModal(); renderApps();
+    saveApps(); markLastUpdated(); closeAppModal(); renderApps(); renderPortfolios();
 }
 
 function deleteApp(id) {
@@ -558,42 +474,21 @@ function deleteApp(id) {
     saveApps();
     markLastUpdated();
     renderApps();
+    renderPortfolios();
 }
 
 // ======================== CONTACTS ========================
-let currentVoiceBlob = null;
-let currentTranscript = '';
-let mediaRecorder = null;
-let recordingChunks = [];
-let recStartTime = null;
-let recTimer = null;
-let speechRecognition = null;
-
 function renderContacts() {
     const q = document.getElementById('contact-search').value.toLowerCase();
     let filtered = contacts.filter(c => {
-        return !q || [c.name,c.company,c.email,c.comments,c.source,c.resume,c.voiceTranscript].some(v => (v||'').toLowerCase().includes(q));
+        return !q || [c.name,c.company,c.email,c.comments,c.source].some(v => (v||'').toLowerCase().includes(q));
     });
     filtered.sort((a,b) => new Date(b.created||0) - new Date(a.created||0));
     const grid = document.getElementById('contacts-grid');
     document.getElementById('contact-empty').style.display = filtered.length ? 'none' : 'block';
     grid.innerHTML = filtered.map(c => {
         const emailLink = c.email ? `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : '';
-        const phoneLink = c.phone ? `<a href="tel:${esc(c.phone)}">${esc(c.phone)}</a>` : '';
-        // Multi-phone support
-        let phonesHtml = '';
-        if (c.phones && c.phones.length > 0) {
-            phonesHtml = c.phones.map(p => {
-                const icon = p.label === 'WhatsApp' ? '💬' : p.label === 'Call' ? '📞' : '📱';
-                const href = p.label === 'WhatsApp' ? `https://wa.me/${p.number.replace(/[^\d+]/g,'')}` : `tel:${esc(p.number)}`;
-                return `<div class="cc-detail">${icon} <a href="${href}" target="_blank">${esc(p.number)}</a> <span style="font-size:.72rem;color:var(--text-muted)">(${esc(p.label)})</span></div>`;
-            }).join('');
-        } else if (c.phone) {
-            phonesHtml = `<div class="cc-detail">📱 <a href="tel:${esc(c.phone)}">${esc(c.phone)}</a></div>`;
-        }
-        const linkedinLink = c.linkedin ? `<a href="${esc(c.linkedin)}" target="_blank">LinkedIn Profile</a>` : '';
-        const voiceHtml = c.voiceNote ? `<div class="cc-voice"><audio src="${c.voiceNote}" controls preload="none"></audio></div>` : '';
-        const transcriptHtml = c.voiceTranscript ? `<div class="cc-transcript" style="font-size:.8rem;color:var(--text-muted);margin-top:.4rem;background:var(--bg-alt);border-radius:8px;padding:.5rem .75rem;border-left:3px solid var(--accent)"><strong style="font-size:.72rem;color:var(--accent-light);display:block;margin-bottom:.2rem">📝 Transcript</strong>${esc(c.voiceTranscript)}</div>` : '';
+        const linkedinLink = c.linkedin ? `<a href="${esc(c.linkedin)}" target="_blank">LinkedIn</a>` : '';
         return `<div class="contact-card">
             <div class="cc-header">
                 <div>
@@ -606,35 +501,18 @@ function renderContacts() {
                 </div>
             </div>
             ${emailLink ? `<div class="cc-detail">📧 ${emailLink}</div>` : ''}
-            ${phonesHtml}
             ${linkedinLink ? `<div class="cc-detail">💼 ${linkedinLink}</div>` : ''}
-            <div class="cc-detail">🔗 <span style="font-size:.78rem">${esc(c.source||'')}</span></div>
-            ${c.resume ? `<div class="cc-resume">📄 Resume shared: ${esc(c.resume)}</div>` : ''}
+            <div class="cc-detail">🔗 ${esc(c.source||'Other')}</div>
             ${c.comments ? `<div class="cc-comments">${esc(c.comments)}</div>` : ''}
-            ${voiceHtml}
-            ${transcriptHtml}
             <div class="cc-meta">Added ${fmtDate(c.created)}</div>
         </div>`;
     }).join('');
     const tot = contacts.length;
-    const sources = {};
-    contacts.forEach(c => { sources[c.source||'Other'] = (sources[c.source||'Other']||0)+1; });
-    let statHtml = `<div class="stat-chip"><strong>${tot}</strong> Contacts</div>`;
-    Object.entries(sources).sort((a,b)=>b[1]-a[1]).slice(0,4).forEach(([k,v]) => {
-        statHtml += `<div class="stat-chip"><strong>${v}</strong> ${k}</div>`;
-    });
-    document.getElementById('contact-stats-bar').innerHTML = statHtml;
+    document.getElementById('contact-stats-bar').innerHTML = `<div class="stat-chip"><strong>${tot}</strong> Contacts</div>`;
 }
 
 function openContactModal(id) {
     document.getElementById('contact-modal-overlay').classList.add('active');
-    currentVoiceBlob = null;
-    currentTranscript = '';
-    document.getElementById('rec-preview').style.display = 'none';
-    document.getElementById('rec-delete').style.display = 'none';
-    document.getElementById('rec-timer').textContent = '';
-    document.getElementById('rec-transcript').value = '';
-    document.getElementById('rec-transcript').style.display = 'none';
     if (id) {
         const c = contacts.find(d=>d.id===id);
         document.getElementById('contact-modal-title').textContent = 'Edit Contact';
@@ -642,42 +520,17 @@ function openContactModal(id) {
         document.getElementById('c-name').value = c.name||'';
         document.getElementById('c-company').value = c.company||'';
         document.getElementById('c-email').value = c.email||'';
-        // Load phones
-        document.getElementById('phone-list').innerHTML = '';
-        if (c.phones && c.phones.length > 0) {
-            c.phones.forEach(p => addPhoneRow(p.number, p.label));
-        } else if (c.phone) {
-            addPhoneRow(c.phone, 'Call');
-        } else {
-            addPhoneRow('', 'Call');
-        }
         document.getElementById('c-linkedin').value = c.linkedin||'';
         document.getElementById('c-source').value = c.source||'Other';
-        document.getElementById('c-resume').value = c.resume||'';
         document.getElementById('c-comments').value = c.comments||'';
-        if (c.voiceNote) {
-            currentVoiceBlob = c.voiceNote;
-            document.getElementById('rec-preview').src = c.voiceNote;
-            document.getElementById('rec-preview').style.display = 'block';
-            document.getElementById('rec-delete').style.display = 'inline-flex';
-            document.getElementById('transcribe-btn').style.display = 'inline-flex';
-        }
-        if (c.voiceTranscript) {
-            currentTranscript = c.voiceTranscript;
-            document.getElementById('rec-transcript').value = c.voiceTranscript;
-            document.getElementById('rec-transcript').style.display = 'block';
-        }
     } else {
         document.getElementById('contact-modal-title').textContent = 'Add Networking Contact';
         document.getElementById('c-edit-id').value = '';
         ['c-name','c-company','c-email','c-linkedin','c-comments'].forEach(fid => document.getElementById(fid).value = '');
-        document.getElementById('phone-list').innerHTML = '';
-        addPhoneRow('', 'Call');
         document.getElementById('c-source').value = 'Networking Event';
-        document.getElementById('c-resume').value = '';
     }
 }
-function closeContactModal() { document.getElementById('contact-modal-overlay').classList.remove('active'); stopRecording(); }
+function closeContactModal() { document.getElementById('contact-modal-overlay').classList.remove('active'); }
 function editContact(id) { openContactModal(id); }
 function deleteContact(id) {
     if (!confirm('Delete this contact?')) return;
@@ -693,14 +546,9 @@ function saveContact() {
         name: document.getElementById('c-name').value.trim(),
         company: document.getElementById('c-company').value.trim(),
         email: document.getElementById('c-email').value.trim(),
-        phones: getPhoneRows(),
-        phone: getPhoneRows().length > 0 ? getPhoneRows()[0].number : '', // backward compat
         linkedin: document.getElementById('c-linkedin').value.trim(),
         source: document.getElementById('c-source').value,
-        resume: document.getElementById('c-resume').value,
-        comments: document.getElementById('c-comments').value.trim(),
-        voiceNote: currentVoiceBlob || null,
-        voiceTranscript: document.getElementById('rec-transcript').value.trim() || null
+        comments: document.getElementById('c-comments').value.trim()
     };
     if (!entry.name) { alert('Name is required.'); return; }
     if (eid) {
@@ -714,157 +562,77 @@ function saveContact() {
     saveContacts(); markLastUpdated(); closeContactModal(); renderContacts();
 }
 
-// ======================== VOICE RECORDING + SPEECH-TO-TEXT ========================
-function startSpeechRecognition() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) return;
-    speechRecognition = new SpeechRecognition();
-    speechRecognition.continuous = true;
-    speechRecognition.interimResults = true;
-    speechRecognition.lang = 'en-US';
-    let finalTranscript = currentTranscript || '';
-    const transcriptEl = document.getElementById('rec-transcript');
-    transcriptEl.style.display = 'block';
-    speechRecognition.onresult = (event) => {
-        let interim = '';
-        for (let i = event.resultIndex; i < event.results.length; i++) {
-            if (event.results[i].isFinal) {
-                finalTranscript += event.results[i][0].transcript + ' ';
-            } else {
-                interim += event.results[i][0].transcript;
-            }
+// ======================== PORTFOLIO GUIDE ========================
+function renderPortfolios() {
+    const portfolioMap = new Map();
+    
+    // Collect unique portfolios from applications
+    apps.forEach(app => {
+        if (!portfolioMap.has(app.portfolio)) {
+            portfolioMap.set(app.portfolio, {
+                name: app.portfolio,
+                url: app.link,
+                count: 0,
+                desc: ''
+            });
         }
-        transcriptEl.value = finalTranscript + (interim ? '...' + interim : '');
-        currentTranscript = finalTranscript;
-    };
-    speechRecognition.onerror = (e) => {
-        console.log('Speech recognition error:', e.error);
-        if (e.error === 'no-speech' || e.error === 'audio-capture') {
-            // Auto-restart on transient errors
-            try { speechRecognition.start(); } catch(x) {}
-        }
-    };
-    speechRecognition.onend = () => {
-        transcriptEl.value = (currentTranscript || '').trim();
-        // Auto-restart if still recording
-        if (mediaRecorder && mediaRecorder.state === 'recording') {
-            try { speechRecognition.start(); } catch(x) {}
-        }
-    };
-    try { speechRecognition.start(); } catch(x) {}
-}
-
-function stopSpeechRecognition() {
-    if (speechRecognition) { speechRecognition.stop(); speechRecognition = null; }
-}
-
-async function startRecording() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        recordingChunks = [];
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordingChunks.push(e.data); };
-        mediaRecorder.onstop = () => {
-            const blob = new Blob(recordingChunks, { type: 'audio/webm' });
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                currentVoiceBlob = reader.result;
-                const preview = document.getElementById('rec-preview');
-                preview.src = currentVoiceBlob;
-                preview.style.display = 'block';
-                document.getElementById('rec-delete').style.display = 'inline-flex';
-            };
-            reader.readAsDataURL(blob);
-            stream.getTracks().forEach(t => t.stop());
-            clearInterval(recTimer);
-        };
-        mediaRecorder.start();
-        recStartTime = Date.now();
-        document.getElementById('rec-start').style.display = 'none';
-        document.getElementById('rec-stop').style.display = 'inline-flex';
-        recTimer = setInterval(() => {
-            const s = Math.floor((Date.now() - recStartTime) / 1000);
-            document.getElementById('rec-timer').textContent = `${Math.floor(s/60)}:${(s%60).toString().padStart(2,'0')}`;
-        }, 500);
-        // Start speech-to-text in parallel
-        startSpeechRecognition();
-    } catch (err) {
-        alert('Microphone access denied. Please allow microphone permissions.');
-    }
-}
-
-function stopRecording() {
-    if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
-    stopSpeechRecognition();
-    document.getElementById('rec-start').style.display = 'inline-flex';
-    document.getElementById('rec-stop').style.display = 'none';
-    clearInterval(recTimer);
-}
-
-function deleteRecording() {
-    currentVoiceBlob = null;
-    currentTranscript = '';
-    document.getElementById('rec-preview').style.display = 'none';
-    document.getElementById('rec-preview').src = '';
-    document.getElementById('rec-delete').style.display = 'none';
-    document.getElementById('rec-timer').textContent = '';
-    document.getElementById('rec-transcript').value = '';
-    document.getElementById('rec-transcript').style.display = 'none';
-    document.getElementById('transcribe-btn').style.display = 'none';
-}
-
-// Transcribe existing audio using playback + speech recognition
-function transcribeExistingAudio() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) { alert('Speech recognition not supported in this browser. Use Chrome or Edge.'); return; }
-    const transcriptEl = document.getElementById('rec-transcript');
-    transcriptEl.style.display = 'block';
-    transcriptEl.value = 'Listening... play the audio above and speak along, or type manually.';
-    transcriptEl.focus();
-}
-
-// ======================== MULTI-PHONE MANAGEMENT ========================
-function addPhoneRow(number, label) {
-    const list = document.getElementById('phone-list');
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex;gap:.5rem;align-items:center;margin-bottom:.35rem';
-    row.innerHTML = `
-        <select style="width:110px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.4rem .5rem;color:var(--text);font-size:.82rem">
-            <option value="Call"${label==='Call'?' selected':''}>📞 Call</option>
-            <option value="WhatsApp"${label==='WhatsApp'?' selected':''}>💬 WhatsApp</option>
-            <option value="Other"${label==='Other'?' selected':''}>📱 Other</option>
-        </select>
-        <input type="tel" placeholder="+1 555-123-4567" value="${esc(number||'')}" style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.4rem .5rem;color:var(--text);font-size:.82rem">
-        <button class="btn btn-danger btn-xs" onclick="this.parentElement.remove()">&times;</button>
-    `;
-    list.appendChild(row);
-}
-
-function getPhoneRows() {
-    const rows = document.querySelectorAll('#phone-list > div');
-    const phones = [];
-    rows.forEach(row => {
-        const label = row.querySelector('select').value;
-        const number = row.querySelector('input').value.trim();
-        if (number) phones.push({ label, number });
+        const p = portfolioMap.get(app.portfolio);
+        p.count++;
     });
-    return phones;
-}
 
-// ======================== CONTACT PICKER API (Mobile) ========================
-async function pickFromContacts() {
-    try {
-        const props = ['name', 'email', 'tel'];
-        const opts = { multiple: false };
-        const picked = await navigator.contacts.select(props, opts);
-        if (picked && picked.length > 0) {
-            const c = picked[0];
-            if (!document.getElementById('contact-modal-overlay').classList.contains('active')) openContactModal();
-            if (c.name && c.name[0]) document.getElementById('c-name').value = c.name[0];
-            if (c.email && c.email[0]) document.getElementById('c-email').value = c.email[0];
-            if (c.tel && c.tel[0]) document.getElementById('c-phone').value = c.tel[0];
-        }
-    } catch (err) { console.log('Contact Picker not available or cancelled:', err); }
+    // Create cards for all unique portfolios (role-specific)
+    const portfolios = Array.from(portfolioMap.values()).sort((a,b) => b.count - a.count);
+    
+    const grid = document.getElementById('portfolios-grid');
+    const generic = genericResumes.filter(g => !portfolioMap.has(g.name));
+    
+    let html = '';
+    
+    // Show role-specific portfolios
+    portfolios.forEach(p => {
+        const repoUrl = extractGitHubRepoUrl(p.url);
+        const isGeneric = genericResumes.some(g => g.name === p.name);
+        const icon = isGeneric ? '💰' : '🎯';
+        html += `
+            <div class="contact-card">
+                <div class="cc-header"><div>
+                    <div class="cc-name">${icon} ${esc(p.name)}</div>
+                    <div class="cc-company">${p.count} application${p.count !== 1 ? 's' : ''}</div>
+                </div></div>
+                <div class="cc-detail" style="flex-direction:column;align-items:flex-start;gap:.25rem">
+                    <strong style="color:var(--text);font-size:.85rem">Used for:</strong>
+                    <span>Role-specific portfolio. ${isGeneric ? 'Works for multiple role categories.' : ''}</span>
+                </div>
+                <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
+                    <a href="${esc(p.url)}" target="_blank" style="color:var(--accent-light);text-decoration:none;font-size:.8rem">🔗 Portfolio Site</a>
+                    ${repoUrl ? `<a href="${repoUrl}" target="_blank" style="color:var(--info);text-decoration:none;font-size:.8rem">📦 GitHub Repo</a>` : ''}
+                </div>
+            </div>`;
+    });
+
+    // Show generic resumes section
+    if (generic.length > 0) {
+        html += `<div class="contact-card" style="border:2px dashed var(--border)">
+            <div class="cc-header"><div>
+                <div class="cc-name">📋 Generic Resumes</div>
+                <div class="cc-company">Use for any role</div>
+            </div></div>
+            <div class="cc-detail" style="flex-direction:column;align-items:flex-start;gap:.5rem">
+                <strong style="color:var(--text);font-size:.85rem">These work for ALL roles:</strong>
+                ${generic.map(g => {
+                    const repoUrl = extractGitHubRepoUrl(g.url);
+                    return `<div style="display:flex;gap:.5rem;align-items:center;font-size:.82rem">
+                        <span>${g.icon} ${esc(g.name)}</span>
+                        <a href="${esc(g.url)}" target="_blank" style="color:var(--accent-light);text-decoration:none">→ View</a>
+                        ${repoUrl ? `<a href="${repoUrl}" target="_blank" style="color:var(--info);text-decoration:none">Repo</a>` : ''}
+                    </div>`;
+                }).join('')}
+            </div>
+        </div>`;
+    }
+
+    grid.innerHTML = html || '<div class="empty-state"><h3>No portfolios yet</h3><p>Add your first application to see available portfolios</p></div>';
+    document.getElementById('portfolios-empty').style.display = (portfolios.length || generic.length) ? 'none' : 'block';
 }
 
 // ======================== EXPORT / IMPORT ========================
@@ -888,7 +656,7 @@ function importAll(event) {
             else if (Array.isArray(d)) { apps = d; saveApps(); }
             if (d.contacts) { contacts = d.contacts; saveContacts(); }
             markLastUpdated();
-            renderApps(); renderContacts();
+            renderApps(); renderContacts(); renderPortfolios();
             alert('Data imported successfully.');
         } catch (err) { alert('Invalid JSON file.'); }
     };
@@ -908,6 +676,9 @@ toggle.addEventListener('click', () => {
     toggle.textContent = next === 'dark' ? '☀️' : '🌙';
 });
 
+// ======================== AUTO-REFRESH LAST UPDATED ========================
+setInterval(renderLastUpdated, UPDATE_INTERVAL);
+
 // ======================== EVENTS ========================
 document.getElementById('app-modal-overlay').addEventListener('click', e => { if (e.target===e.currentTarget) closeAppModal(); });
 document.getElementById('contact-modal-overlay').addEventListener('click', e => { if (e.target===e.currentTarget) closeContactModal(); });
@@ -915,18 +686,12 @@ document.getElementById('search-input').addEventListener('input', renderApps);
 document.getElementById('filter-status').addEventListener('change', renderApps);
 document.getElementById('contact-search').addEventListener('input', renderContacts);
 
-// Show Contact Picker button only if API is available (mobile Chrome on Android)
-if ('contacts' in navigator && 'ContactsManager' in window) {
-    document.getElementById('picker-btn').style.display = 'inline-flex';
-}
-
 // ======================== HELPERS ========================
 function esc(s) { const d = document.createElement('div'); d.textContent = s||''; return d.innerHTML; }
 function fmtDate(d) { if (!d) return '—'; const dt = new Date(d+'T00:00:00'); return dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
 
 // ======================== INIT ========================
-loadApps(); loadContacts(); seedLastUpdatedIfMissing(); renderApps(); renderContacts(); renderLastUpdated();
+loadApps(); loadContacts(); seedLastUpdatedIfMissing(); renderApps(); renderContacts(); renderPortfolios(); renderLastUpdated();
 </script>
 </body>
 </html>
-
