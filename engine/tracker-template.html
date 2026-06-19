@@ -255,12 +255,26 @@ const CONTACT_KEY = 'rd_contacts';
 const META_KEY = 'rd_tracker_meta';
 const UPDATE_INTERVAL = 30000; // Auto-refresh Last Updated badge every 30 seconds
 
-// Default apps - EMPTY FOR NEW USERS, populates from stored data
-const defaultApps = [];
+// Default apps - Pre-populated with existing applications
+const defaultApps = [
+    { id:1, portfolio:'RD-Profile', role:'Technical Support Director', company:'Boulevard', date:'2026-06-10', link:'https://rdammala.github.io/RD-Profile/', status:'Applied', comments:'' },
+    { id:2, portfolio:'Senior-Incident-Manager', role:'Senior Incident Manager', company:'Amazon Prime Video', date:'2026-06-11', link:'https://rdammala.github.io/Senior-Incident-Manager/', status:'Applied', comments:'' },
+    { id:3, portfolio:'Staff-Escalation-Manager', role:'Staff Escalation Manager', company:'Snowflake', date:'2026-06-12', link:'https://rdammala.github.io/Staff-Escalation-Manager/', status:'Applied', comments:'' },
+    { id:4, portfolio:'Technical-Lead-Deployment-Operations', role:'Technical Lead, Deployment Operations', company:'OpenAI', date:'2026-06-13', link:'https://rdammala.github.io/Technical-Lead-Deployment-Operations/', status:'Applied', comments:'' },
+    { id:5, portfolio:'Manager-Cloud-Support', role:'Manager, Cloud Support Engineering', company:'Cox Enterprises / RapidScale', date:'2026-06-14', link:'https://rdammala.github.io/Manager-Cloud-Support/', status:'Denied', comments:'Application denied due to no visa sponsorship; candidate on H1B.' },
+    { id:6, portfolio:'Senior-Manager-SRE', role:'Senior Manager, Site Reliability Engineering', company:'NVIDIA', date:'2026-06-14', link:'https://rdammala.github.io/Senior-Manager-SRE/', status:'Applied', comments:'' },
+    { id:7, portfolio:'Application-SRE-Manager', role:'Application SRE & Ops Manager', company:'IRIS Software Group', date:'2026-06-15', link:'https://rdammala.github.io/Application-SRE-Manager/', status:'Applied', comments:'' },
+    { id:8, portfolio:'Senior-IT-Systems-Operations-Manager', role:'Sr. IT Systems Operations Manager', company:'ExtraHop', date:'2026-06-15', link:'https://rdammala.github.io/Senior-IT-Systems-Operations-Manager/', status:'Applied', comments:'' },
+    { id:9, portfolio:'TPM-Infrastructure', role:'Technical Program Manager, Infrastructure', company:'Figma', date:'2026-06-16', link:'https://rdammala.github.io/TPM-Infrastructure/', status:'Applied', comments:'' },
+    { id:10, portfolio:'SRE-Observability-Engineering', role:'Senior SRE & Observability Engineering Leader', company:'Microsoft Tech (General)', date:'2026-06-16', link:'https://rdammala.github.io/SRE-Observability-Engineering/', status:'Applied', comments:'' },
+    { id:11, portfolio:'Platform-Monitoring-Engineer-Incident-Manager', role:'Platform Monitoring Engineer / Incident Manager', company:'Adyen', date:'2026-06-17', link:'https://rdammala.github.io/Platform-Monitoring-Engineer-Incident-Manager/', status:'Applied', comments:'' },
+    { id:12, portfolio:'Senior-Platform-Reliability-Engineer', role:'Senior Platform Reliability Engineer', company:'GrowTherapy', date:'2026-06-18', link:'https://rdammala.github.io/Senior-Platform-Reliability-Engineer/', status:'Applied', comments:'' },
+    { id:13, portfolio:'Senior-Manager-SRE', role:'Lead Site Reliability Engineer', company:'JPMorgan Chase', date:'2026-06-19', link:'https://rdammala.github.io/Senior-Manager-SRE/', status:'Applied', comments:'Market Risk Technology; Lead SRE with AI-assisted workflows emphasis' }
+];
 
 // Generic resumes that can be used for any role
 const genericResumes = [
-    { name: 'RD-Profile', desc: 'Technical Support Director', url: 'https://rdammala.github.io/RD-Profile/', icon: '🌐' },
+    { name: 'RD-Profile', desc: 'Technical Support Director', url: 'https://rdammala.github.io/RD-Profile/', icon: '🏗️' },
     { name: 'Finance-Decision-Engine', desc: 'Finance Operations & FinOps Director', url: 'https://rdammala.github.io/Finance-Decision-Engine/', icon: '💰' }
 ];
 
