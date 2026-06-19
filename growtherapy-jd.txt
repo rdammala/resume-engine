@@ -1,0 +1,30 @@
+**Company:** Grow Therapy
+**Position:** Senior Platform Reliability Engineer
+**Location:** Hybrid (San Francisco, NYC, or Seattle) — 3 days/week onsite + 2-3 travel/year
+**Salary Range:** $182,000 - $250,000 USD Annually
+
+## About Grow Therapy
+Grow Therapy is a three-sided healthcare marketplace empowering therapists, augmenting insurance payors, and serving patients. Founded in February 2021, the company has 10,000+ therapists and 100,000s+ clients across the US. Backed by $328M+ in funding from Sequoia Capital, Transformation Capital, TCV, SignalFire, and others at a $3B valuation.
+
+## Role Summary
+**High-level impact:** Define and scale reliability as a first-class capability at Grow Therapy, operating horizontally across the organization to shape how reliability is understood, measured, and built into developer experience.
+
+## Key Responsibilities
+1. **Define Reliability Standards** — Establish frameworks for SLOs/SLAs, error budgets, operational readiness; help teams understand what to measure and why
+2. **Improve Observability & Measurement** — Identify gaps in metrics/logging/tracing; ensure services are measurable, debuggable, reliability-aligned
+3. **Evolve Incident Response** — Develop/improve incident response (detection → post-incident learning); help teams build sustainable on-call/escalation patterns
+4. **Enable Self-Service Reliability** — Partner with platform team to build tooling/abstractions (scorecards, dashboards, templates, golden paths) for adoption
+5. **Drive Adoption Across Teams** — Educate, influence, guide engineering teams; scale reliability through standards, communication, developer-friendly systems
+
+## Ideal Candidate
+- **6+ years** operating/improving reliability of production systems at scale
+- **Strong cloud + infrastructure:** AWS, Kubernetes (EKS), Terraform (hands-on)
+- **Deep reliability expertise:** SLOs/SLAs, error budgets, measurement-driven improvement
+- **Observability expert:** Modern tooling (DataDog), metrics/logs/traces
+- **Systems thinker:** Identify patterns, design scalable solutions
+- **Communicator:** Drive change across teams without direct authority
+- **Self-directed:** Define problems, propose solutions, execute independently
+- **Team player:** Collaborate, mentor, learn from others
+
+## Bonus Skills
+- Experience introducing/scaling reliability practices in growing orgs

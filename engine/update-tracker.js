@@ -23,10 +23,35 @@ async function updateTracker(job, pagesUrl, profile) {
     return;
   }
 
-  const files = [trackerDesktop, trackerRepo].filter(f => fs.existsSync(f));
+  let files = [trackerDesktop, trackerRepo].filter(f => fs.existsSync(f));
+  
+  // If no tracker files exist, create one from template
   if (files.length === 0) {
-    console.warn('[tracker] No tracker files found; skipping.');
-    return;
+    console.log('[tracker] No tracker files found; creating from template...');
+    const templatePath = path.join(__dirname, 'tracker-template.html');
+    
+    if (fs.existsSync(templatePath)) {
+      // Ensure directories exist
+      const desktopDir = path.dirname(trackerDesktop);
+      const repoTrackerDir = path.dirname(trackerRepo);
+      
+      if (!fs.existsSync(desktopDir)) fs.mkdirSync(desktopDir, { recursive: true });
+      if (!fs.existsSync(repoTrackerDir)) fs.mkdirSync(repoTrackerDir, { recursive: true });
+      
+      // Copy template to both locations
+      const templateContent = fs.readFileSync(templatePath, 'utf8');
+      fs.writeFileSync(trackerDesktop, templateContent, 'utf8');
+      fs.writeFileSync(trackerRepo, templateContent, 'utf8');
+      
+      console.log(`[tracker] ✓ Created tracker from template`);
+      console.log(`[tracker]   → Desktop: ${trackerDesktop}`);
+      console.log(`[tracker]   → Repo: ${trackerRepo}`);
+      
+      files = [trackerDesktop, trackerRepo];
+    } else {
+      console.warn('[tracker] Template not found; skipping tracker creation.');
+      return;
+    }
   }
 
   const newEntry = buildEntry(job, pagesUrl);

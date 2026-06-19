@@ -1,0 +1,46 @@
+RAJESH DAMMALA
+Seattle, WA | rajesh.dammala@gmail.com | +1-425-229-0060 | linkedin.com/in/rajesh-dammala
+
+PROFESSIONAL SUMMARY
+Visionary SRE leader with 14+ years defining and scaling reliability across mission-critical production systems. Specialize in transforming reactive incident response into proactive, measurement-driven reliability. Build platforms, tooling, and practices that make it intuitive for engineers to operate reliable systems independently.
+
+CORE COMPETENCIES
+- Reliability Engineering: SLOs/SLAs, error budgets, operational readiness frameworks
+- Observability Architecture: Metrics, logging, tracing, dashboards (DataDog, Azure AppInsights, Kusto/KQL)
+- Incident Management: Detection, triage, on-call rotation, blameless postmortems
+- Platform Tooling: Self-service platforms, golden paths, enablement
+- Team Leadership: Led 32-person global teams, cross-functional influence
+- Cloud & Infrastructure: AWS, Kubernetes (EKS), Terraform, Azure
+
+SELECTED IMPACT
+- Defined SLOs/SLAs for 20+ mission-critical services; achieved 100% SLA compliance
+- Architected observability platform enabling 32 engineers to independently measure and troubleshoot reliability
+- Engineered incident automation reducing alert noise by 500+ and automating 30-35% of incident resolution
+- Built 175+ playbooks establishing golden paths; reduced MTTR by 32%, improved efficiency from 85% to 98%
+- Eliminated 25,000+ false incidents through noise reduction and alerting optimization
+
+PROFESSIONAL EXPERIENCE
+
+Lead Escalations Manager, Xbox Customer Experience SRE
+Microsoft Corporation (via TechMahindra) | Redmond, WA | May 2021 – Present
+- Defined SLOs/SLAs for 20+ mission-critical services; 100% SLA compliance through measurement-driven improvements
+- Architected observability platform enabling 32 engineers to independently measure and troubleshoot reliability
+- Engineered incident automation reducing alert noise by 500+ and automating 30-35% of incident resolution
+- Built 175+ playbooks establishing golden paths; reduced MTTR by 32%, improved efficiency from 85% to 98%
+- Eliminated 25,000+ false incidents through noise reduction and alerting optimization
+
+Operations Lead, Azure LiveSite Operations
+Microsoft Corporation (via Mindtree) | Redmond, WA | Nov 2016 – May 2021
+- Led 32-person global operations team; scaled incident response and operational readiness practices
+- Deep-dive technical investigations into complex production issues; created 200+ bugs and feature upgrades
+- Built PowerShell automation saving thousands of operational hours annually
+- Established incident management and change management standards for Azure platforms
+
+EDUCATION
+Bachelor of Engineering in Computer Science Engineering — JNTU Hyderabad
+
+TECHNICAL SKILLS
+- Azure (AppInsights, Logic Apps, KeyVault, Azure DevOps)
+- Kusto/KQL, Power BI, DataDog, Grafana
+- Incident Management: ICM, SLAs, SLOs, SLIs, error budgets
+- PowerShell, Git, CI/CD Pipelines, Terraform
